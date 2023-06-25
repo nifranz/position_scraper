@@ -1,7 +1,6 @@
 const { exec } = require('child_process');
-const { error, log } = require('console');
-const sqlite3 = require('sqlite3');
-const PositionsDatabase = require('./database/PositionsDatabase.js')
+const CONSTANTS = require('../constants');
+const PositionsDatabase = require('../database/PositionsDatabase.js')
 
 // defining trim function for strings
 String.prototype.trim = function() {
@@ -32,7 +31,7 @@ async function run() {
     console.log(positions)
 
     console.log("Executing mail.sh")
-    exec(`echo "${unsentPositions.trim()}" | sh ./mail.sh`, (error, stdout, stderr) => {
+    exec(`echo "${unsentPositions.trim()}" | sh ./mail.sh ${CONSTANTS.email}`, (error, stdout, stderr) => {
         if (error) {
             console.error("Error executing script", error);
             return
