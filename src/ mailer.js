@@ -1,44 +1,28 @@
 const { exec } = require('child_process');
 const { error, log } = require('console');
 const sqlite3 = require('sqlite3');
+const PositionsDatabase = require('./database/PositionsDatabase.js')
 
 // defining trim function for strings
 String.prototype.trim = function() {
     return this.replace(/^\s+|\s+$/g, "");
 };
 
-async function retrieveUnsentPositions() {
-    return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database('./positions.sqlite');
-
-        const query = `SELECT * FROM positions WHERE email_sent = 0`;
-
-        const positions = {}
-        db.all(query, (err, rows) => {
-            if(err) {
-                reject(err)
-                return;
-            }
-
-            rows.forEach((row) => {
-                positions[row.id] = row.position;
-            });
-
-            resolve(positions)
-        });
-        db.close();
-    });
-}
-
 async function run() {
+    let db = new PositionsDatabase();
     let positions;
+
     try {
-        positions = await retrieveUnsentPositions();
-    }
-    catch (err) {
-        console.error('Database error:', err.message);
+        positions = await db.listPositions('unsent');
+    } catch (e) {
+        console.error(e);
+    } 
+
+    if (!positions) {
+        console.log("No positions retrieved")
         return;
     }
+
     unsentPositions = ""
     for (position of Object.values(positions)) {
         unsentPositions += `${position}\n`
@@ -46,6 +30,7 @@ async function run() {
 
     console.log(unsentPositions)
     console.log(positions)
+
     console.log("Executing mail.sh")
     exec(`echo "${unsentPositions.trim()}" | sh ./mail.sh`, (error, stdout, stderr) => {
         if (error) {
