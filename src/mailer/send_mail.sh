@@ -1,12 +1,14 @@
 #!/bin/bash
 echo "mail.sh: creating new ./temp_mail.txt with unsent positions"
-cp ./mail_template.txt ./temp_mail.txt
+scriptdir=$(dirname "$0")
+echo "scriptdir: "$scriptdir
+cp $scriptdir/mail_template.txt $scriptdir/temp_mail.txt
 
 while IFS= read -r line; do
-    echo "$line" >> ./temp_mail.txt
+    echo "$line" >> $scriptdir/temp_mail.txt
 done
 
 email=$1;
 
-sendmail $email < ./temp_mail.txt;
-rm ./temp_mail.txt;
+sendmail $email < $scriptdir/temp_mail.txt;
+rm $scriptdir/temp_mail.txt;

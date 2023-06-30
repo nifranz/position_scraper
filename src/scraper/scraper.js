@@ -4,6 +4,7 @@ const cheerio = require('cheerio');
 const CONSTANTS = require('../constants');
 
 module.exports = async function scrapePositions() {
+    console.log("Scraping positions ...")
     // Download the HTML page
     const response = await axios.get(CONSTANTS.url);
     const html = response.data;
@@ -21,5 +22,6 @@ module.exports = async function scrapePositions() {
             positions.push(positionElement.text().trim());
         }
     });
+    console.log("Done!")
     return positions;
 }
