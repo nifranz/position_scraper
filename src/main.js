@@ -27,7 +27,7 @@ console.log = function (message, prefix = '│') {
   
     // Call the original console.log function to display the output in the console
     originalConsoleLog(message);
-  };
+};
 async function runScraperWorkflow() {
     return new Promise(async (resolve, reject) => {
         console.log("───────────────────────────────────────────────────────────────────────", "╭");

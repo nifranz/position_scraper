@@ -143,7 +143,7 @@ module.exports = class PositionsDatabase {
                         positions (position, last_seen) 
                         VALUES (?, ?)
                     `;
-                his.connection.run(insertQuery, [position, currentDate], async (err) => {
+                this.connection.run(insertQuery, [position, currentDate], async (err) => {
                     await this.closeConnection();
                     if (err) {
                         console.error('Database error while trying to update position '+position+"\n"+ err.message)
